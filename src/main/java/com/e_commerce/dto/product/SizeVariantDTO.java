@@ -1,4 +1,4 @@
-package com.e_commerce.dto;
+package com.e_commerce.dto.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +8,9 @@ import lombok.Data;
 
 @Data
 public class SizeVariantDTO {
+
+
+    //ADD ID FIELD AND CHANGE EVERYTHING RELEVANT
 
     @NotBlank(message = "Size is required")
     private String size;

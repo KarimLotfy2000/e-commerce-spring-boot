@@ -1,6 +1,6 @@
 package com.e_commerce.request;
 
-import com.e_commerce.dto.SizeVariantDTO;
+import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;

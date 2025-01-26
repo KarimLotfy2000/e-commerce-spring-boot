@@ -1,7 +1,7 @@
 package com.e_commerce.controller;
 
-import com.e_commerce.dto.ProductDTO;
-import com.e_commerce.dto.SizeVariantDTO;
+import com.e_commerce.dto.product.ProductDTO;
+import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.enums.Gender;
 import com.e_commerce.response.ApiResponse;
 import com.e_commerce.service.product.ProductService;
@@ -90,6 +90,7 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam String brand) {
         ProductDTO product = productService.getProductByNameAndBrand(name, brand);
+
         return ResponseEntity.ok(new ApiResponse<>("Product retrieved successfully", product));
     }
 
@@ -114,5 +115,7 @@ public class ProductController {
         return ResponseEntity.ok(new ApiResponse<>("Products by gender retrieved successfully", products));
     }
     // CHANGE RESPONSES TO INCLUDE ONLY THE NEEDED FIELDS FOR THE FRONTEND TO DISPLAY THE PRODUCTS
-    // ADD FILTERING AND PAGINATION TO THE GET ALL PRODUCTS ENDPOINT
+    // ADD  "ADD TO LIKES" FEATURE
+    // ADD "REVIEW" FEATURE
+    // ADD FILTERING, SORTING AND  PAGINATION TO THE GET ALL PRODUCTS ENDPOINT
 }

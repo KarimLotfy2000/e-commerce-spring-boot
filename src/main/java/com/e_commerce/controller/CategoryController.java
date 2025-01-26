@@ -1,6 +1,6 @@
 package com.e_commerce.controller;
 
-import com.e_commerce.dto.CategoryDTO;
+import com.e_commerce.dto.product.CategoryDTO;
 import com.e_commerce.response.ApiResponse;
 import com.e_commerce.service.category.CategoryService;
 import jakarta.validation.Valid;

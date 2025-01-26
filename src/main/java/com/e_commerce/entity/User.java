@@ -30,17 +30,18 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private Set<UserRole> userRoles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private Cart cart;
 
 
@@ -52,8 +53,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userRoles.stream()
-                 .map(role -> new SimpleGrantedAuthority(role.getRole().getName().name()))
+         return userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole().getName().name()))
                 .collect(Collectors.toList());
     }
 

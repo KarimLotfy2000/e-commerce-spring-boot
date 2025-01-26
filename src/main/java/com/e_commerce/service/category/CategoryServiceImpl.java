@@ -1,14 +1,12 @@
 package com.e_commerce.service.category;
 
-import com.e_commerce.dto.CategoryDTO;
+import com.e_commerce.dto.product.CategoryDTO;
 import com.e_commerce.entity.Category;
 import com.e_commerce.exceptions.AlreadyExistsException;
 import com.e_commerce.exceptions.ResourceNotFoundException;
 import com.e_commerce.repository.CategoryRepository;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +48,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO createCategory(CategoryDTO categoryDto) {
-        var name = categoryDto.getId();
         if(categoryRepository.existsByName(categoryDto.getName())) {
             throw new AlreadyExistsException("Category with name " + categoryDto.getName() + " already exists");
         }
         Category category = toCategory(categoryDto);
-        categoryRepository.save(category);;
+        categoryRepository.save(category);
         return toCategoryDto(category);
     }
 

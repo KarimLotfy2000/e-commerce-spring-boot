@@ -1,7 +1,7 @@
 package com.e_commerce.service.product;
 
-import com.e_commerce.dto.ProductDTO;
-import com.e_commerce.dto.SizeVariantDTO;
+import com.e_commerce.dto.product.ProductDTO;
+import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.entity.Category;
 import com.e_commerce.entity.Product;
 import com.e_commerce.entity.SizeVariant;

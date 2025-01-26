@@ -1,6 +1,6 @@
 package com.e_commerce.service.category;
 
-import com.e_commerce.dto.CategoryDTO;
+import com.e_commerce.dto.product.CategoryDTO;
 
 import java.util.List;
 

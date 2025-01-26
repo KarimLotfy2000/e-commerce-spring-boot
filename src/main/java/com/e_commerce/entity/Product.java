@@ -22,16 +22,16 @@ public class Product {
     private String brand;
     private String material;
     private String color;
+
     @Enumerated(EnumType.STRING)
     @Column(name="gender")
     private Gender gender;
+
     private Double price;
     private LocalDateTime createdAt;
 
-
-    @ElementCollection()
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "image_url")
-
     private List<String> images;
 
     @ManyToOne

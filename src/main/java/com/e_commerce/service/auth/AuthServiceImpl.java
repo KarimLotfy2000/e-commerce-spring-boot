@@ -1,6 +1,6 @@
 package com.e_commerce.service.auth;
 
-import com.e_commerce.dto.UserDTO;
+import com.e_commerce.dto.user.UserDTO;
 import com.e_commerce.entity.Role;
 import com.e_commerce.entity.User;
 import com.e_commerce.entity.UserRole;

@@ -1,4 +1,4 @@
-package com.e_commerce.dto;
+package com.e_commerce.dto.product;
 
 import com.e_commerce.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.sql.Struct;
 import java.util.List;
 
 @Data

@@ -1,7 +1,7 @@
 package com.e_commerce.controller;
 
 
-import com.e_commerce.dto.UserDTO;
+import com.e_commerce.dto.user.UserDTO;
 import com.e_commerce.request.LoginRequest;
 import com.e_commerce.response.ApiResponse;
 import com.e_commerce.response.LoginResponse;

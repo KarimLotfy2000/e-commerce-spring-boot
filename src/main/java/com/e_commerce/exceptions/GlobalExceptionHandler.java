@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.lang.module.ResolutionException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,20 @@ public class GlobalExceptionHandler {
     // Handle AlreadyExistsException
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ApiResponse<Object>> handleAlreadyExistsException(AlreadyExistsException ex) {
+        ApiResponse<Object> response = new ApiResponse<>(ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ApiResponse<Object> response = new ApiResponse<>(ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+    // Handle ResolutionException
+    @ExceptionHandler(ResolutionException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResolutionException(ResolutionException ex) {
         ApiResponse<Object> response = new ApiResponse<>(ex.getMessage(), null);
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
