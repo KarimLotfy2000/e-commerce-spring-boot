@@ -182,6 +182,11 @@ public class ProductServiceImpl implements  ProductService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllBrands() {
+        return productRepository.findAllBrands();
+    }
+
 
     private ProductDTO toProductDto(Product product){
         return modelMapper.map(product, ProductDTO.class);

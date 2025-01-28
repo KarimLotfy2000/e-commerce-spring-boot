@@ -2,7 +2,7 @@ package com.e_commerce.service.cart;
 
 import com.e_commerce.dto.cart.CartDTO;
 import com.e_commerce.dto.cart.CartItemDTO;
-import com.e_commerce.dto.cart.CartSizeVariantDTO;
+import com.e_commerce.dto.cart.CartOrderSizeVariantDTO;
 import com.e_commerce.dto.cart.ProductSummaryDTO;
 import com.e_commerce.entity.*;
 import com.e_commerce.exceptions.ResourceNotFoundException;
@@ -11,7 +11,6 @@ import com.e_commerce.repository.SizeVariantRepository;
 import com.e_commerce.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class CartServiceImpl implements CartService {
 
         SizeVariant sizeVariant = cartItem.getSizeVariant();
         if (quantity > sizeVariant.getStock()) {
-            throw new IllegalStateException("Insufficient stock for size variant: " + sizeVariant.getSize());
+            throw new IllegalArgumentException("Insufficient stock for size variant: " + sizeVariant.getSize());
         }
 
         cartItem.setQuantity(quantity);
@@ -175,7 +174,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private CartItemDTO toCartItemDTO(CartItem cartItem) {
-        CartSizeVariantDTO sizeVariantDTO = toCartSizeVariantDTO(cartItem.getSizeVariant());
+        CartOrderSizeVariantDTO sizeVariantDTO = toCartOrderSizeVariantDTO(cartItem.getSizeVariant());
         return new CartItemDTO(
                 cartItem.getId(),
                 cartItem.getQuantity(),
@@ -183,7 +182,8 @@ public class CartServiceImpl implements CartService {
                 sizeVariantDTO
         );
     }
-    private CartSizeVariantDTO toCartSizeVariantDTO(SizeVariant sizeVariant) {
+    @Override
+    public CartOrderSizeVariantDTO toCartOrderSizeVariantDTO(SizeVariant sizeVariant) {
         Product product = sizeVariant.getProduct();
 
         ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO();
@@ -192,7 +192,7 @@ public class CartServiceImpl implements CartService {
         productSummaryDTO.setName(product.getName());
         productSummaryDTO.setImage(product.getImages().isEmpty() ? null : product.getImages().getFirst());
 
-        CartSizeVariantDTO dto = new CartSizeVariantDTO();
+        CartOrderSizeVariantDTO dto = new CartOrderSizeVariantDTO();
         dto.setId(sizeVariant.getId());
         dto.setSize(sizeVariant.getSize());
         dto.setPrice(sizeVariant.getPrice());

@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
         }
          User user = modelMapper.map(userDTO, User.class);
          user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-         Role userRole = roleRepository.findByName(RoleName.USER)
+         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Role User not found"));
         UserRole userRoleEntity = new UserRole();
         userRoleEntity.setUser(user);

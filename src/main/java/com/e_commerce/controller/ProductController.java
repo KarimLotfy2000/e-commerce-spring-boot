@@ -114,6 +114,13 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByGender(gender);
         return ResponseEntity.ok(new ApiResponse<>("Products by gender retrieved successfully", products));
     }
+
+    //13. Get ALl Brands
+    @GetMapping("/brands")
+    public ResponseEntity<ApiResponse<List<String>>> getAllBrands() {
+        List<String> brands = productService.getAllBrands();
+        return ResponseEntity.ok(new ApiResponse<>("Brands retrieved successfully", brands));
+    }
     // CHANGE RESPONSES TO INCLUDE ONLY THE NEEDED FIELDS FOR THE FRONTEND TO DISPLAY THE PRODUCTS
     // ADD  "ADD TO LIKES" FEATURE
     // ADD "REVIEW" FEATURE

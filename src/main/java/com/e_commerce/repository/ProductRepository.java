@@ -4,6 +4,7 @@ import com.e_commerce.entity.Category;
 import com.e_commerce.entity.Product;
 import com.e_commerce.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategory(Category category);
 
     List<Product> findByGenderIn(List<Gender> genders);
+
+    @Query("SELECT DISTINCT p.brand FROM Product p")
+    List<String> findAllBrands();
 }

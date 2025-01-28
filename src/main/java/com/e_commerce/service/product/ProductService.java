@@ -23,4 +23,5 @@ public interface ProductService {
 
     List<ProductDTO> getProductsByGender(Gender gender);
 
+    List<String> getAllBrands();
 }

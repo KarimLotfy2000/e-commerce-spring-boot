@@ -11,6 +11,6 @@ public class CartItemDTO {
     private Long id;
     private Integer quantity;
     private Double subtotal;
-    private CartSizeVariantDTO sizeVariant;
+    private CartOrderSizeVariantDTO sizeVariant;
 
 }
