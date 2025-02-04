@@ -11,7 +11,7 @@ public class SizeVariantDTO {
 
 
     //ADD ID FIELD AND CHANGE EVERYTHING RELEVANT
-
+    private Long id;
     @NotBlank(message = "Size is required")
     private String size;
 

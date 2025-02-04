@@ -1,6 +1,7 @@
 package com.e_commerce.service.product;
 
 import com.e_commerce.dto.product.ProductDTO;
+import com.e_commerce.dto.product.ProductPreviewDTO;
 import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.entity.Category;
 import com.e_commerce.entity.Product;
@@ -14,6 +15,10 @@ import com.e_commerce.request.ProductUpdateRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -70,6 +75,29 @@ public class ProductServiceImpl implements  ProductService{
                 .stream()
                 .map(this::toProductDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductPreviewDTO> getFilteredProducts(
+            List<Gender> gender,
+            String category,
+            String brand,
+            Double minPrice,
+            Double maxPrice,
+            String sortBy,
+            String order,
+            int page,
+            int size
+    ) {
+        Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return productRepository.findFilteredProducts(gender, category, brand, minPrice, maxPrice, pageable);
+    }
+
+    @Override
+    public List<ProductPreviewDTO> getAllProductPreviews() {
+        return productRepository.findAllProductPreviews();
     }
 
     @Override
@@ -175,10 +203,10 @@ public class ProductServiceImpl implements  ProductService{
                 .collect(Collectors.toList());
     }
     @Override
-    public List<ProductDTO> getProductsByGender(Gender gender) {
-        return productRepository.findByGenderIn(Arrays.asList(gender, Gender.UNISEX))
+    public List<ProductPreviewDTO> getProductsByGender(Gender gender) {
+        return productRepository.findProductPreviewsByGender(Arrays.asList(gender, Gender.UNISEX))
                 .stream()
-                .map(this::toProductDto)
+                .map(this::ProductPreviewDTO)
                 .collect(Collectors.toList());
     }
 
@@ -193,6 +221,9 @@ public class ProductServiceImpl implements  ProductService{
     }
     private Product toProduct(ProductDTO productDTO){
         return modelMapper.map(productDTO, Product.class);
+    }
+    private ProductPreviewDTO ProductPreviewDTO(ProductPreviewDTO productPreviewDTO){
+        return modelMapper.map(productPreviewDTO, ProductPreviewDTO.class);
     }
 
 }
