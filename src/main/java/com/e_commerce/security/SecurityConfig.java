@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +37,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity; enable in production
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
+
                 .authorizeHttpRequests(auth -> auth
                         // Allow all requests to the auth routes
                         .requestMatchers("/api/v1/auth/**").permitAll()
@@ -39,15 +46,18 @@ public class SecurityConfig {
                         // Allow only GET requests to product routes
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll() // Allow GET requests for products
                         .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole("ADMIN") // Allow POST by admin only
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasRole("ADMIN") // Allow PUT by admin only
+                         .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasRole("ADMIN") // Allow PUT by admin only
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasRole("ADMIN") // Allow DELETE by admin only
-
+                        .requestMatchers("/api/v1/products/**").permitAll() // Allow GET requests for products
                         // Allow only authenticated users to cart and order routes
                         .requestMatchers("/api/v1/cart/**").authenticated()
                         .requestMatchers("/api/v1/order/**").authenticated()
 
                         // Allow only admins to categories
-                        .requestMatchers("/api/v1/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll() // Allow GET requests for products
+                        .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole("ADMIN") // Allow POST by admin only
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasRole("ADMIN") // Allow PUT by admin only
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasRole("ADMIN") // Allow DELETE by admin only
 
                         // All other requests require authentication
                         .anyRequest().authenticated()
@@ -61,8 +71,20 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
-     @Bean
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

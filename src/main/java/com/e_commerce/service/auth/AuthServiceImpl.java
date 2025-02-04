@@ -14,8 +14,10 @@ import com.e_commerce.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,19 +56,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse loginUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+         User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found."));
 
-        User user = (User) authentication.getPrincipal();
-        String token = jwtUtils.generateToken(user);
-        Set<String> roles = user.getUserRoles().stream()
-                .map(userRole -> userRole.getRole().getName().name())
-                .collect(Collectors.toSet());
-        return new LoginResponse(
-                token,
-                user.getEmail(),
-                user.getName()
-                ,roles
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+
+            User authenticatedUser = (User) authentication.getPrincipal();
+            String token = jwtUtils.generateToken(authenticatedUser);
+            Set<String> roles = authenticatedUser.getUserRoles().stream()
+                    .map(userRole -> userRole.getRole().getName().name())
+                    .collect(Collectors.toSet());
+
+            return new LoginResponse(token, authenticatedUser.getEmail(), authenticatedUser.getName(), roles);
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid email or password.");
+        }
     }
+
+
 }
