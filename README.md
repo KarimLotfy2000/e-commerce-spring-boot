@@ -1,7 +1,7 @@
 # 🛍️ E-Commerce Backend (Spring Boot)
 
 A backend system for an **e-commerce platform**, built with **Spring Boot**, featuring authentication, product management, cart functionality, and order processing.
-
+🔗 **Frontend Repository:** [Next.js App Router Frontend](https://github.com/KarimLotfy2000/e-commerce-project)
 ---
 
 ## 🚀 Features
