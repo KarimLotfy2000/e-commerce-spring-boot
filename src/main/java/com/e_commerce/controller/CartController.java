@@ -23,7 +23,10 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<CartDTO>> addItemToCart(
             @RequestParam Long sizeVariantId,
-            @RequestParam Integer quantity) {
+            @RequestParam (required = false) Integer quantity) {
+        if (quantity == null) {
+            quantity = 1;
+        }
         CartDTO updatedCart = cartService.addItemToCart(sizeVariantId, quantity);
         return ResponseEntity.ok(new ApiResponse<>("Item added to cart successfully", updatedCart));
     }

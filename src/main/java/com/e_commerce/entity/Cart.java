@@ -19,6 +19,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double totalPrice;
+    private Integer totalItems;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<CartItem> cartItems = new ArrayList<>();

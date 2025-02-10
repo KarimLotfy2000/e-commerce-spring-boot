@@ -1,6 +1,7 @@
 package com.e_commerce.controller;
 
 import com.e_commerce.dto.product.ProductDTO;
+import com.e_commerce.dto.product.ProductFilterDTO;
 import com.e_commerce.dto.product.ProductPreviewDTO;
 import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.enums.Gender;
@@ -55,6 +56,7 @@ public class ProductController {
             @RequestParam(required = false) List<Gender> gender,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String color,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -63,7 +65,7 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<ProductPreviewDTO> products = productService.getFilteredProducts(
-                gender, category, brand, minPrice, maxPrice, sortBy, order, page, size);
+                gender, category, brand, color, minPrice, maxPrice, sortBy, order, page, size);
 
         return ResponseEntity.ok(products);
     }
@@ -145,11 +147,11 @@ public class ProductController {
     }
 
 
-    // Get ALl Brands
-    @GetMapping("/brands")
-    public ResponseEntity<ApiResponse<List<String>>> getAllBrands() {
-        List<String> brands = productService.getAllBrands();
-        return ResponseEntity.ok(new ApiResponse<>("Brands retrieved successfully", brands));
+    // Get ALl Filters
+    @GetMapping("/filters")
+    public ResponseEntity<ApiResponse<ProductFilterDTO>> getProductFilters() {
+        ProductFilterDTO filterData = productService.getProductFilters();
+        return ResponseEntity.ok(new ApiResponse<>("Product filters retrieved successfully", filterData));
     }
 
 

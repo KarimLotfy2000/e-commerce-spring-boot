@@ -17,46 +17,66 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
-    SELECT new com.e_commerce.dto.product.ProductPreviewDTO(
-        p.id, p.name, p.brand, p.category.name,
-        (SELECT i FROM p.images i ORDER BY i LIMIT 1), p.price
-    )
-    FROM Product p
-    WHERE (:category IS NULL OR p.category.name = :category)
-      AND (:brand IS NULL OR p.brand = :brand)
-      AND (:minPrice IS NULL OR p.price >= :minPrice)
-      AND (:maxPrice IS NULL OR p.price <= :maxPrice)
-      AND (
-            :gender IS NULL\s
-            OR p.gender IN :gender
-            OR p.gender = 'UNISEX'
-      )
-""")
+                SELECT new com.e_commerce.dto.product.ProductPreviewDTO(
+                    p.id, p.name, p.brand, p.color,
+                    (SELECT i FROM p.images i ORDER BY i LIMIT 1), p.price
+                )
+                FROM Product p
+                WHERE (:category IS NULL OR p.category.name = :category)
+                  AND (:brand IS NULL OR p.brand = :brand)
+                  AND (:color IS NULL OR p.color = :color)
+                  AND (:minPrice IS NULL OR p.price >= :minPrice)
+                  AND (:maxPrice IS NULL OR p.price <= :maxPrice)
+                  AND (
+                        :gender IS NULL\s
+                        OR p.gender IN :gender
+                        OR p.gender = 'UNISEX'
+                  )
+            """)
     Page<ProductPreviewDTO> findFilteredProducts(
             List<Gender> gender,
             String category,  // Exact match with category name
             String brand,  // Exact match with brand name
+            String color,
             Double minPrice,
             Double maxPrice,
             Pageable pageable
     );
 
 
-
     Optional<Product> findByNameAndBrand(String name, String brand);
+
     List<Product> findByCategory(Category category);
 
     @Query("SELECT new com.e_commerce.dto.product.ProductPreviewDTO(" +
-            "p.id, p.name, p.brand, p.category.name, " +
+            "p.id, p.name, p.brand, p.color, " +
             "(SELECT i FROM p.images i ORDER BY i ASC LIMIT 1), p.price) " +
             "FROM Product p " +
             "WHERE p.gender IN :genders")
     List<ProductPreviewDTO> findProductPreviewsByGender(@Param("genders") List<Gender> genders);
 
-    @Query("SELECT DISTINCT p.brand FROM Product p")
-    List<String> findAllBrands();
+    @Query("""
+    SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL
+""")
+    List<String> findDistinctBrands();
 
-    @Query("SELECT new com.e_commerce.dto.product.ProductPreviewDTO(p.id, p.name, p.brand, p.category.name, " +
+    @Query("""
+    SELECT DISTINCT p.color FROM Product p WHERE p.color IS NOT NULL
+""")
+    List<String> findDistinctColors();
+
+    @Query("""
+    SELECT MIN(p.price) FROM Product p
+""")
+    Double findLowestPrice();
+
+    @Query("""
+    SELECT MAX(p.price) FROM Product p
+""")
+    Double findHighestPrice();
+
+
+    @Query("SELECT new com.e_commerce.dto.product.ProductPreviewDTO(p.id, p.name, p.brand, p.color, " +
             "(SELECT i FROM p.images i ORDER BY i LIMIT 1), p.price) FROM Product p")
     List<ProductPreviewDTO> findAllProductPreviews();
 

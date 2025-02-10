@@ -64,6 +64,7 @@ public class CartServiceImpl implements CartService {
         }
 
         updateCartTotalPrice(cart);
+        updateTotalItems(cart);
         return toCartDTO(cartRepository.save(cart));
     }
 
@@ -77,6 +78,7 @@ public class CartServiceImpl implements CartService {
         }
 
         updateCartTotalPrice(cart);
+        updateTotalItems(cart);
         cartRepository.save(cart);
         return toCartDTO(cart);
     }
@@ -99,6 +101,7 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(quantity);
         cartItem.setSubtotal(quantity * sizeVariant.getPrice());
         updateCartTotalPrice(cart);
+        updateTotalItems(cart);
         cartRepository.save(cart);
         return toCartDTO(cart);
     }
@@ -108,6 +111,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getOrCreateCartForCurrentUser();
         cart.getCartItems().clear();
         cart.setTotalPrice(0.0);
+        cart.setTotalItems(0);
         cartRepository.save(cart);
         return toCartDTO(cart);
     }
@@ -142,6 +146,11 @@ public class CartServiceImpl implements CartService {
         });
     }
 
+    private void updateTotalItems(Cart cart) {
+        cart.setTotalItems(cart.getCartItems().stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum());
+    }
     private void updateCartTotalPrice(Cart cart) {
         double totalPrice = cart.getCartItems() == null || cart.getCartItems().isEmpty()
                 ? 0.0
@@ -170,7 +179,7 @@ public class CartServiceImpl implements CartService {
         List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
                 .map(this::toCartItemDTO)
                 .toList();
-        return new CartDTO(cart.getId(), cart.getTotalPrice(), cartItemDTOs);
+        return new CartDTO(cart.getId(), cart.getTotalPrice(),cart.getTotalItems(), cartItemDTOs );
     }
 
     private CartItemDTO toCartItemDTO(CartItem cartItem) {

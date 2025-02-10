@@ -11,7 +11,7 @@ public class ProductPreviewDTO {
     private Long id;
     private String name;
     private String brand;
-    private String category;
-    private String image;
+    private String color;
+     private String image;
     private Double price;
 }

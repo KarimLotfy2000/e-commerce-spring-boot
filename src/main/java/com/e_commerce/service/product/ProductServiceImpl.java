@@ -1,6 +1,7 @@
 package com.e_commerce.service.product;
 
 import com.e_commerce.dto.product.ProductDTO;
+import com.e_commerce.dto.product.ProductFilterDTO;
 import com.e_commerce.dto.product.ProductPreviewDTO;
 import com.e_commerce.dto.product.SizeVariantDTO;
 import com.e_commerce.entity.Category;
@@ -82,6 +83,7 @@ public class ProductServiceImpl implements  ProductService{
             List<Gender> gender,
             String category,
             String brand,
+            String color,
             Double minPrice,
             Double maxPrice,
             String sortBy,
@@ -92,7 +94,7 @@ public class ProductServiceImpl implements  ProductService{
         Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return productRepository.findFilteredProducts(gender, category, brand, minPrice, maxPrice, pageable);
+        return productRepository.findFilteredProducts(gender, category, brand, color, minPrice, maxPrice, pageable);
     }
 
     @Override
@@ -211,9 +213,15 @@ public class ProductServiceImpl implements  ProductService{
     }
 
     @Override
-    public List<String> getAllBrands() {
-        return productRepository.findAllBrands();
+    public ProductFilterDTO getProductFilters() {
+        List<String> brands = productRepository.findDistinctBrands();
+        List<String> colors = productRepository.findDistinctColors();
+        Double lowestPrice = productRepository.findLowestPrice();
+        Double highestPrice = productRepository.findHighestPrice();
+
+        return new ProductFilterDTO(brands, colors, lowestPrice, highestPrice);
     }
+
 
 
     private ProductDTO toProductDto(Product product){

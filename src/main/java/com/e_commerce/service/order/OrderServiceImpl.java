@@ -107,6 +107,7 @@ public class OrderServiceImpl implements OrderService {
 
         cart.getCartItems().clear();
         cart.setTotalPrice(0.0);
+        cart.setTotalItems(0);
         cartRepository.save(cart);
 
         return toOrderDTO(savedOrder);
