@@ -13,7 +13,7 @@ target/
 .springBeans
 .sts4-cache
 
-*.properties
+src/main/resources/application-local.properties
 
 ### IntelliJ IDEA ###
 .idea
